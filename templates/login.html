@@ -229,8 +229,14 @@
       </div>
 
       <div class="divider"></div>
+      <form action="/login" method="POST">
+        {% with errors = get_flashed_messages(category_filter=["error"]) %}
+        {% if errors %}
+        <p style="color: white">{{errors[0]}}</p>
+        {% endif %}
+        {% endwith %}
 
-      <div class="form-group">
+        <div class="form-group">
         <label for="library-id">Library ID</label>
         <input type="text" id="library-id" name="library_id"
                placeholder="Enter your Library ID" autocomplete="username"/>
@@ -242,7 +248,8 @@
                placeholder="Enter your password" autocomplete="current-password"/>
       </div>
 
-      <button type="button" class="btn-login">Login</button>
+      <button type="submit" class="btn-login">Login</button>
+      </form>
     </div>
 
     <div class="right">
@@ -251,7 +258,6 @@
         alt="Dr. Martin Luther King, Jr. Library – San José State University"
       />
     </div>
-
   </div>
 </body>
 </html>
