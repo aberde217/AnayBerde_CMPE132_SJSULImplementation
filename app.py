@@ -73,7 +73,7 @@ def professor():
     if request.method == 'POST':
         session.clear() # clears session data,
         return redirect(url_for('login'))
-    return render_template('student_page.html')
+    return render_template('professor_page.html')
 
 @app.route('/borrower', methods=['GET', 'POST'])
 def borrower():
