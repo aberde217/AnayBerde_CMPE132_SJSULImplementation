@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash
+from flask import Flask, render_template, request, flash, redirect, url_for
 import sqlite3
 import hashlib
 import secrets
@@ -31,22 +31,20 @@ def login():
             elif row[5] == 'inactive':  # check if user is active
                 flash('Account deactivated. Visit MLK Library for further action.', 'error')
             else:
-                conn = get_db_connection()
-                rows = conn.execute(
-                    "SELECT first_name || ' ' || last_name AS full_name, library_id, role FROM Users"
-                ).fetchall()
-                conn.close()
-
-                users = [dict(row) for row in rows]
-                return render_template('admin_dashboard.html', users=users)
+                return redirect(url_for('dashboard'))
     return render_template('login.html')
 
 
-@app.route('/dashboard')
+@app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
     conn = get_db_connection()
+    cursor = conn.cursor()
+    if request.method == 'POST':
+        id = request.form['library_id']
+        cursor.execute("UPDATE Users SET active_status = 'inactive' WHERE library_id = (?)", (id,))
+        conn.commit()
     rows = conn.execute(
-        "SELECT first_name || ' ' || last_name AS full_name, library_id, role FROM Users"
+        "SELECT first_name || ' ' || last_name AS full_name, library_id, role FROM Users WHERE active_status = 'active'"
     ).fetchall()
     conn.close()
 

@@ -297,7 +297,10 @@
               </td>
               <td>
                 {% if user['role'] | lower != 'librarian' %}
-                <button class="btn-remove" onclick="handleRemove('{{ user['library_id'] }}', this)">Remove</button>
+                <form action="/dashboard" method="POST">
+                  <input type="hidden" name="library_id" value="{{ user['library_id'] }}">
+                  <button class="btn-remove">Remove</button>
+                </form>
                 {% endif %}
               </td>
             </tr>
@@ -340,14 +343,6 @@
     });
 
     noRes.style.display = (rows.length > 0 && visibleCount === 0) ? 'block' : 'none';
-  }
-
-  function handleRemove(libraryId, btn) {
-    const row = btn.closest('tr');
-    row.style.transition = 'opacity 0.3s, transform 0.3s';
-    row.style.opacity = '0';
-    row.style.transform = 'translateX(12px)';
-    setTimeout(() => row.remove(), 300);
   }
 </script>
 
