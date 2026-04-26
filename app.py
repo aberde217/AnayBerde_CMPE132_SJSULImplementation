@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import Flask, render_template, request, flash, redirect, url_for, session
 import sqlite3
 import hashlib
 import secrets
@@ -20,6 +20,7 @@ def login():
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM Users WHERE library_id = (?)", (id,)) # selects ROW for that library id if it exists
         row = cursor.fetchone()
+        session['first_name'] = row[0] # used for role-based pages
         if row is None:
             flash('Invalid Credentials, login failed.', 'error')
         else:
@@ -31,7 +32,15 @@ def login():
             elif row[5] == 'inactive':  # check if user is active
                 flash('Account deactivated. Visit MLK Library for further action.', 'error')
             else:
-                return redirect(url_for('dashboard'))
+                role = row[4]
+                if role == "Librarian":
+                    return redirect(url_for('dashboard'))
+                elif role == "Student":
+                    return redirect(url_for('student'))
+                elif role == "Professor":
+                    return redirect(url_for('professor'))
+                else:
+                    return redirect(url_for('borrower'))
     return render_template('login.html')
 
 
@@ -51,6 +60,27 @@ def dashboard():
     users = [dict(row) for row in rows]
 
     return render_template('admin_dashboard.html', users=users)
+
+@app.route('/student', methods=['GET', 'POST'])
+def student():
+    if request.method == 'POST':
+        session.clear() # clears session data,
+        return redirect(url_for('login'))
+    return render_template('student_page.html')
+
+@app.route('/professor', methods=['GET', 'POST'])
+def professor():
+    if request.method == 'POST':
+        session.clear() # clears session data,
+        return redirect(url_for('login'))
+    return render_template('student_page.html')
+
+@app.route('/borrower', methods=['GET', 'POST'])
+def borrower():
+    if request.method == 'POST':
+        session.clear() # clears session data,
+        return redirect(url_for('login'))
+    return render_template('borrower_page.html')
 
 @app.route('/create_user', methods=['GET', 'POST'])
 def create_user():

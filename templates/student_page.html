@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student SJSUL</title>
+</head>
+<body>
+    <div style="text-align: center">
+        <form action="/student" method="POST">
+        <h3>Student Catalogue, proves RBAC!</h3>
+            <p>Hi {{session['first_name']}}</p>
+        <button type="submit">Logout</button>
+        </form>
+    </div>
+</body>
+</html>
