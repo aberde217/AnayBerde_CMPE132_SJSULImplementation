@@ -3,7 +3,7 @@ import sqlite3
 import hashlib
 import secrets
 app = Flask(__name__)
-app.secret_key = "mlkkeyanay"
+app.secret_key = "waFEZ3cLWaeQZr1fr5yqULit"
 
 def get_db_connection():
     conn = sqlite3.connect('mlklibrary.db')
